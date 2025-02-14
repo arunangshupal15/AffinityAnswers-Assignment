@@ -119,5 +119,5 @@ def validate_address(address):
 address_correct = "D-89, NH-2, NTPC Township, Madhya Pradesh 486885"
 address_incorrect = "Colony, Bengaluru, Karnataka 560050"
 
-print(validate_address(address_correct))  # Output: True
-print(validate_address(address_incorrect))  # Output: False
+print(validate_address(address_correct))  
+print(validate_address(address_incorrect))  
