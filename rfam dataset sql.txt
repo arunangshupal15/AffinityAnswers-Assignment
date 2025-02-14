@@ -1,0 +1,52 @@
+1.a     SELECT COUNT(DISTINCT species)
+        FROM Rfam.taxonomy
+        WHERE species LIKE '%Panthera tigris%';
+
+1.b     SELECT ncbi_id
+        FROM Rfam.taxonomy
+        WHERE species LIKE '%Panthera tigris sumatrae%';
+
+2.      rfam_acc, rfamseq_acc, ncbi_id
+
+3.      SELECT tx.species, MAX(rs.length) AS max_length
+        FROM Rfam.rfamseq rs
+        JOIN Rfam.taxonomy tx ON rs.ncbi_id = tx.ncbi_id
+        WHERE tx.species LIKE '%Oryza%'
+        GROUP BY tx.species
+        ORDER BY max_length DESC
+        LIMIT 1;
+
+
+
+4.      SELECT
+        f.rfam_acc AS family_accession_id,
+        f.rfam_id AS family_name,
+        max_lengths.max_sequence_length
+        FROM
+            family f
+        JOIN (
+            SELECT
+                fr.rfam_acc,
+                MAX(fr.seq_end - fr.seq_start + 1) AS max_sequence_length
+            FROM
+                Rfam.full_region fr
+            JOIN
+                Rfam.rfamseq r ON fr.rfamseq_acc = r.rfamseq_acc
+            WHERE
+                r.mol_type = 'DNA'
+            GROUP BY
+                fr.rfam_acc
+            HAVING
+                MAX(fr.seq_end - fr.seq_start + 1) > 1000000
+        ) AS max_lengths ON f.rfam_acc = max_lengths.rfam_acc
+        ORDER BY
+            max_lengths.max_sequence_length DESC
+        LIMIT 15 OFFSET 120;
+
+
+
+
+
+
+
+
